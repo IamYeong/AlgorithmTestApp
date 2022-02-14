@@ -14,7 +14,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private TextView arrayText;
-    private Button bubbleSortButton;
+    private Button bubbleSortButton, selectionSortButton, insertionSortButton;
     private List<Integer> array;
     private ImageButton shuffleButton;
 
@@ -26,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
         arrayText = findViewById(R.id.tv_array);
         shuffleButton = findViewById(R.id.btn_shuffle);
         bubbleSortButton = findViewById(R.id.btn_bubble_sort);
+        selectionSortButton = findViewById(R.id.btn_selection_sort);
+        insertionSortButton = findViewById(R.id.btn_insertion_sort);
 
         shuffleButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,6 +48,27 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        selectionSortButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SortManager sortManager = new SortManager();
+                sortManager.selectionSort(array);
+
+                updateArrayText();
+            }
+        });
+
+        insertionSortButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                SortManager sortManager = new SortManager();
+                sortManager.insertionSort(array);
+
+                updateArrayText();
+
+            }
+        });
 
 
     }
