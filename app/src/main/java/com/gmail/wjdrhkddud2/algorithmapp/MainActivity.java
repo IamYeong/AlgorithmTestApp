@@ -14,7 +14,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private TextView arrayText;
-    private Button bubbleSortButton, selectionSortButton, insertionSortButton;
+    private Button bubbleSortButton, selectionSortButton, insertionSortButton, shellSortButton,
+            quickSortButton, heapSortButton, bucketSortButton, countingSortButton;
     private List<Integer> array;
     private ImageButton shuffleButton;
 
@@ -107,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
             array.set(random, k);
             array.set(i, j);
 
-            System.out.println((array.get(i) + ", "));
+            //System.out.println((array.get(i) + ", "));
 
         }
 
