@@ -105,16 +105,60 @@ public class SortManager {
         return data;
     }
 
-    /** 셸이라는 사람이 만든 삽입정렬 보완보전
-     *
+    /** 셸이라는 사람이 만든 삽입정렬 보완 방법
+     *  기존 삽입정렬은 한칸씩 이동하면서 만약 필요하다면 이전 값을 하나씩 모두 옮겨야 했기 때문에 O(n^2) 이었으나
+     * 셸정렬은 큰 간격 기준으로 옮겨가면서 그 간격을 점차 줄이며 삽입정렬을 하기 때문에 평균적으로 O(n^1.5) 이지만
+     * 가장 최악의 경우에는 O(n^2) 이다.
      * @param data
      * @return
      */
     public List<Integer> shellSort(List<Integer> data) {
 
+        int gap, i;
+        int k = data.size();
+
+        for (gap = k / 2; gap > 0; gap /= 2) {
+
+            if (gap % 2 == 0) {
+                gap++;
+            }
+
+            for (i = 0; i < gap; i++) {
+
+                insertionForShell(data, gap, i, data.size());
+
+            }
+
+        }
 
 
         return data;
+    }
+
+    private void insertionForShell(List<Integer> data, int gap, int start, int last) {
+
+        int i, j;
+
+        for (i = start + gap; i < last; i += gap) {
+
+            int key = data.get(i);
+
+            for (j = i - gap; j >= 0; j -= gap) {
+
+                int ref = data.get(j);
+
+                if (ref < key) {
+                    break;
+                }
+
+                data.set(j + gap, ref);
+
+            }
+
+            data.set(j + gap, key);
+
+        }
+
     }
 
     public List<Integer> countingSort(List<Integer> data) {

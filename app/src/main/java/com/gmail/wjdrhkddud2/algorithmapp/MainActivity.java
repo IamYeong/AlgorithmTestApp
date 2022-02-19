@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         bubbleSortButton = findViewById(R.id.btn_bubble_sort);
         selectionSortButton = findViewById(R.id.btn_selection_sort);
         insertionSortButton = findViewById(R.id.btn_insertion_sort);
+        shellSortButton = findViewById(R.id.btn_shell_sort);
 
         shuffleButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,6 +69,16 @@ public class MainActivity extends AppCompatActivity {
 
                 updateArrayText();
 
+            }
+        });
+
+        shellSortButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SortManager sortManager = new SortManager();
+                sortManager.shellSort(array);
+
+                updateArrayText();
             }
         });
 
