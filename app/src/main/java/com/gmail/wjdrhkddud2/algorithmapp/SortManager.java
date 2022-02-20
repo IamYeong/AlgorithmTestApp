@@ -161,15 +161,72 @@ public class SortManager {
 
     }
 
+    public List<Integer> quickSort(List<Integer> data, int left, int right) {
+
+        if (left < right) {
+            int pivotIndex = partition(data, left, right);
+            quickSort(data, left, pivotIndex - 1);
+            quickSort(data, pivotIndex + 1, right);
+        }
+
+        return data;
+    }
+
+    private int partition(List<Integer> list, int left, int right) {
+
+        int pivot;
+
+        pivot = list.get(left);
+        int low = left;
+        int high = right + 1;
+
+        do {
+
+            do {
+                low++;
+
+                //매개변수로 전달 받은 리스트에서
+                //가장 오른쪽 인덱스보다 가장 왼쪽에서 전진하는 low 인덱스가 이하인지,
+                //low 번째 요소가 기준값인 pivot 보다 작은지 확인하여
+                //맞다면 right 방향으로 한 칸 더 전진
+            } while ((low <= right) && (list.get(low) < pivot));
+
+            do {
+
+                high--;
+
+            } while ((high >= left) && (list.get(high) > pivot));
+
+            if (low < high) {
+                int temp = list.get(low);
+                list.set(low, list.get(high));
+                list.set(high, temp);
+            }
+
+        } while (low < high);
+
+        int temp = list.get(left);
+        list.set(left, list.get(high));
+        list.set(high, temp);
+        //피벗의 위치
+        return high;
+
+    }
+
+    private void swap(List<Integer> list, int n, int m) {
+
+        int temp = list.get(n);
+        list.set(n, list.get(m));
+        list.set(m, temp);
+    }
+
+
     public List<Integer> countingSort(List<Integer> data) {
 
         return data;
     }
 
-    public List<Integer> quickSort(List<Integer> data) {
 
-        return data;
-    }
 
     public List<Integer> mergeSort(List<Integer> data) {
 

@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView arrayText;
     private Button bubbleSortButton, selectionSortButton, insertionSortButton, shellSortButton,
-            quickSortButton, heapSortButton, bucketSortButton, countingSortButton;
+            quickSortButton, heapSortButton, bucketSortButton, countingSortButton, radixSortButton, mergeSortButton;
     private List<Integer> array;
     private ImageButton shuffleButton;
 
@@ -30,6 +30,9 @@ public class MainActivity extends AppCompatActivity {
         selectionSortButton = findViewById(R.id.btn_selection_sort);
         insertionSortButton = findViewById(R.id.btn_insertion_sort);
         shellSortButton = findViewById(R.id.btn_shell_sort);
+        quickSortButton = findViewById(R.id.btn_quick_sort);
+        mergeSortButton = findViewById(R.id.btn_merge_sort);
+        radixSortButton = findViewById(R.id.btn_radix_sort);
 
         shuffleButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +84,30 @@ public class MainActivity extends AppCompatActivity {
                 updateArrayText();
             }
         });
+
+        quickSortButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                SortManager sortManager = new SortManager();
+                sortManager.quickSort(array, 0, array.size() - 1);
+
+                updateArrayText();
+
+            }
+        });
+
+        mergeSortButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+
+                updateArrayText();
+            }
+        });
+
+
 
 
     }

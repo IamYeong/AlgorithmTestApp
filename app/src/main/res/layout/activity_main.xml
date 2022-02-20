@@ -131,6 +131,24 @@
 
                 />
 
+            <Button
+                android:id="@+id/btn_merge_sort"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="MERGE SORT"
+
+                />
+
+            <Button
+                android:id="@+id/btn_radix_sort"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="RADIX SORT"
+
+                />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -148,6 +166,8 @@
                 android:text="탐색 알고리즘으로"
 
                 />
+
+
 
         </LinearLayout>
 
