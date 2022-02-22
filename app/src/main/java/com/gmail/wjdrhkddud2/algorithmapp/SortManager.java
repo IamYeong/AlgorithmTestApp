@@ -1,10 +1,16 @@
 package com.gmail.wjdrhkddud2.algorithmapp;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SortManager {
 
-    public SortManager() {}
+    private List<Integer> mergeSortedList;
+
+    public SortManager() {
+        mergeSortedList = new ArrayList<>();
+
+    }
 
     /** 2022.02.14 Bubble sort
      *  이웃한 데이터를 비교하여 가장 큰 값을 서서히 뒤로 보내면서 탐색범위를 좁혀가는 정렬방식
@@ -76,6 +82,7 @@ public class SortManager {
      * @return
      */
     public List<Integer> insertionSort(List<Integer> data) {
+
 
         int i = 0;
         int j = 0;
@@ -175,7 +182,11 @@ public class SortManager {
      * 아래 코드에서는 index 0 번째 값을 pivot 으로 뽑았지만 이 값을 기준으로 부분리스트가 나뉘기 때문에
      * 실제 중간크기의 값을 뽑는 것이 가장 유리하다.
      *
-     * 2. 배열의 왼쪽부터
+     * 2. pivot의 index 를 제외하고 나머지 부분은 왼쪽과 오른쪽에서 좁혀오면서 pivot크기를 기준으로 교환해나간다.
+     * 왼쪽 커서와 오른쪽 커서가 교차할 때 반복이 끝나면서 pivot을 올바른 위치와 교환한다.
+     *
+     * 3. pivot을 기준으로 왼쪽과 오른쪽은 또 다시 분리교환의 대상이 되는 부분리스트다.
+     * 4. 반복해나가면 부분리스트들이 1개만 남았을 때 모든 정렬이 완료된다.
      *
      *
      * @param data
@@ -275,17 +286,151 @@ public class SortManager {
         list.set(m, temp);
     }
 
+    /** 22.02.22 Counting sort
+     *
+     * 신기한 정렬방법이다. 조건만 맞는다면 이 방법을 써야 한다.
+     * 왜냐하면 값의 비교가 없이 index 를 활용하기 때문에 O(n) 의 효율이다.
+     * 정렬이 안 된 배열이 있을 때, 해당 배열의 수 범위 만큼 새로운 배열을 만들어준다.
+     * 0~999 의 수가 중복허용 조건으로 섞여있을 때 index 가 999까지 있는(length 가 1000인) 배열을 새로 만들어 준다.
+     * 이후 반복문으로 정렬이 안 된 배열을 순회하며 값이 몇 번 등장했는지 counting 하면서 새로 만들었던 counting 배열에
+     * 해당하는 index 값을 1씩 올려준다. 예를 들어 555라는 값이 3번 나왔다면 counting[555] 의 값은 3이 된다.
+     * 이 counting 값들을 작은 index 에서 큰 index 순으로 누적시켜준다.
+     * 그러면 신기하게도 값을 상징하는 counting 배열의 index 안에 들어있는 값은 실제 해당 값이 위치해야 할 (inde + 1) 이 된다.
+     * 따라서 1을 뺴준 값에 해당하는 index 에 counting 배열 index 를 넣어주면 값의 정렬이 되는 것이다.
+     * 이 말을 코드로 풀어보면 각 값의 등장횟수를 누적까지 시킨 counting[] 배열이 있고, 정렬이 안 된 array[] 가 있다면
+     * array[counting[i] - 1] = i;
+     *
+     * @param data
+     * @return
+     */
 
     public List<Integer> countingSort(List<Integer> data) {
+
+        //값의 범위를 알아야 하기 때문에 최댓값 먼저 탐색
+        int max = 0;
+
+        for (int i : data) {
+            if (i > max) max = i;
+        }
+
+        int[] counting = new int[max + 1];
+
+        //등장횟수 세기 (모두 1일 것임. 이 배열엔 중복된 요소가 없음)
+        for (int i : data) {
+
+            counting[i]++;
+
+        }
+
+        //누적하여 큰 인덱스를 무겁게 하여 비교할 필요를 없앰.
+        for (int i = 1; i < counting.length; i++) {
+
+            counting[i] += counting[i - 1];
+
+        }
+
+        for (int i = counting.length - 1; i >= 0; i--) {
+            data.set(counting[i] - 1, i);
+        }
 
         return data;
     }
 
 
+    /**
+     * 22.02.20 Merge sort
+     * 분할 정복 알고리즘이다. 일단 쪼개고 다시 합치면서 정렬을 마친다.
+     * 아래 코드는 2way 합병 정렬이다.
+     * 솔직히 구현하고 나니 이 이상으로 나누는 건 너무 헷갈릴 것 같기도 하다.
+     *
+     * 데이터 분포에 영향을 덜 받는 장점이 있고
+     * 배열 하나만큼의 공간을 더 차지하고 데이터 이동이 많다는 단점이 있지만
+     * 최악의 경우에도 O(n log n) 이기 때문에 효율이 우수하다.
+     *
+     * 익숙하지 않던 이진트리 방법이었기 떄문에 이해가 잘 안 갔었다.
+     * 우선 맨 처음 받은 정렬이 안 된 배열을 루트노드라고 생각한다.
+     * 2way니까 반씩 쪼개서 자식노드들을 만든다.
+     * 조건식을 이용해 1개씩이 될 때 까지 노드를 이진트리로 나누고
+     * 다시 부모노드로 하나씩 올라오면서 인덱스를 이용하여 해당하는 부분을 정렬하며 합친다.
+     *
+     * 자기 호출을 하며 두개로 나누면 이진트리 검색처럼 최하단 노드까지 내려갔다가 차근차근 올라오는 코드를 짤 수 있지만
+     * 모든 함수가 스택에 쌓여있기 때문에 역시 스택오버플로는 주의해야 한다.
+     *
+     * @param data
+     * @return
+     */
 
-    public List<Integer> mergeSort(List<Integer> data) {
+    public List<Integer> mergeSort(List<Integer> data, int left, int right) {
+
+        int mid;
+
+        if (left < right) {
+            //자기호출하면서 부분리스트의 중간 위치도 찾아야 함.
+
+            mid = (left + right) / 2;
+
+            mergeSort(data, left, mid);
+
+
+            mergeSort(data, mid + 1, right);
+
+
+            merge(data, left, mid, right);
+
+        }
+
 
         return data;
+    }
+
+    private void merge(List<Integer> data, int left, int mid, int right) {
+
+        //i는 왼쪽 노드의 첫번째 인덱스,
+        //j는 오른쪽 노드의 첫번째 인덱스,
+        //k는 새로운 배열의 인덱스.
+        int i, j, k, l;
+        i = left;
+        j = mid + 1;
+        k = left;
+
+        while (i <= mid && j <= right) {
+
+            if (data.get(i) <= data.get(j)) {
+
+
+                mergeSortedList.add(k++, data.get(i++));
+            } else {
+
+
+                mergeSortedList.add(k++, data.get(j++));
+            }
+
+        }
+
+        //위에서 임의의 왼쪽 노드와 오른쪽 노드를 합치며 정렬했지만 아직 남은 부분이 있을 수 있음.
+        //어느 부분이 남았냐에 따라 끝까지 배열에 추가해줌.
+        if (i > mid) {
+            for (l = j; l <= right; l++) {
+
+
+                mergeSortedList.add(k++, data.get(l));
+            }
+        } else {
+            for (l = i; l <= mid; l++) {
+
+
+                mergeSortedList.add(k++, data.get(l));
+            }
+
+        }
+
+        //병합할 때 마다 해당 인덱스 부분을 복사.
+        for (l = left; l <= right; l++) {
+
+            data.set(l, mergeSortedList.get(l));
+        }
+
+
     }
 
     public List<Integer> heapSort(List<Integer> data) {

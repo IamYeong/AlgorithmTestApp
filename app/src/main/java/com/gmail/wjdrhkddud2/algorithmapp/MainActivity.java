@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         quickSortButton = findViewById(R.id.btn_quick_sort);
         mergeSortButton = findViewById(R.id.btn_merge_sort);
         radixSortButton = findViewById(R.id.btn_radix_sort);
+        countingSortButton = findViewById(R.id.btn_counting_sort);
 
         shuffleButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,12 +102,22 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-
+                SortManager sortManager = new SortManager();
+                sortManager.mergeSort(array, 0, array.size() - 1);
 
                 updateArrayText();
             }
         });
 
+        countingSortButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SortManager sortManager = new SortManager();
+                sortManager.countingSort(array);
+
+                updateArrayText();
+            }
+        });
 
 
 
@@ -130,7 +141,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         shuffleArray(array);
-
         updateArrayText();
 
     }
