@@ -8,10 +8,10 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 public class SortManager {
 
-    private List<Integer> mergeSortedList;
+
 
     public SortManager() {
-        mergeSortedList = new ArrayList<>();
+
 
     }
 
@@ -282,12 +282,7 @@ public class SortManager {
 
     }
 
-    private void swap(List<Integer> list, int n, int m) {
 
-        int temp = list.get(n);
-        list.set(n, list.get(m));
-        list.set(m, temp);
-    }
 
     /** 22.02.22 Counting sort
      *
@@ -390,6 +385,8 @@ public class SortManager {
 
     private void merge(List<Integer> data, int left, int mid, int right) {
 
+        List<Integer> mergeSortedList = new ArrayList<>();
+
         //i는 왼쪽 노드의 첫번째 인덱스,
         //j는 오른쪽 노드의 첫번째 인덱스,
         //k는 새로운 배열의 인덱스.
@@ -405,7 +402,6 @@ public class SortManager {
 
                 mergeSortedList.add(k++, data.get(i++));
             } else {
-
 
                 mergeSortedList.add(k++, data.get(j++));
             }
@@ -438,62 +434,39 @@ public class SortManager {
 
     }
 
-    public List<Integer> heapSort(List<Integer> data) {
+    public List<Integer> heapSort(List<Integer> base) {
 
-        if (data.size() < 2) {
-            return data;
+        int len = base.size();
+        for(int i = len / 2; i > 0; i--){
+            heapify(base,i,len);
         }
+        do{
+            int tmp = base.get(0);
+            base.set(0, base.get(len - 1));
+            base.set(len - 1, tmp);
+            len = len-1;
+            heapify(base,1,len);
+        }while(len > 1);
 
-        //정렬 안 된 상태에서 마지막 요소를 자식으로 취급한 뒤 부모 인덱스를 우선 가져온다.
-        int parent = getParentIndex(data.size() - 1);
-
-        //우선 max 힙으로 만들기
-        for (int i = parent; i >= 0; i--) {
-
-        }
-
-
-
-        for (int i = data.size() - 1; i > 0; i--) {
-
-            swap(data, 0, i);
-            heapify(data, 0, i - 1);
-
-        }
-
-
-        
-
-        return data;
+        return base;
     }
 
-    private void heapify(List<Integer> data, int parentIndex, int lastIndex) {
+    private void heapify(List<Integer> base, int i, int len) {
 
-        int leftChildIndex;
-        int rightChildIndex;
-        int largestIndex;
-
-        while ((parentIndex * 2) + 1 <= lastIndex) {
-
-            leftChildIndex = parentIndex * 2 + 1;
-            rightChildIndex = parentIndex * 2 + 2;
-            largestIndex = parentIndex;
-
-            if (data.get(leftChildIndex) > data.get(largestIndex)) {
-                largestIndex = leftChildIndex;
+        int j;
+        int tmp = base.get(i - 1);
+        while(i<=len/2){ // 자식 존재 여부
+            j = i*2;
+            if((j<len) && (base.get(j - 1) <base.get(j))){
+                j++;
             }
-
-            if (rightChildIndex <= lastIndex && data.get(largestIndex) < data.get(rightChildIndex)) {
-                largestIndex = rightChildIndex;
+            if(tmp >= base.get(j - 1)){
+                break;
             }
-
-            if (largestIndex != parentIndex) {
-                swap(data, parentIndex, largestIndex);
-                parentIndex = largestIndex;
-            }
-
-
+            base.set(i - 1, base.get(j - 1));
+            i = j;
         }
+        base.set(i - 1, tmp);
 
 
     }
@@ -653,5 +626,11 @@ public class SortManager {
         return data;
     }
 
+    private void swap(List<Integer> list, int n, int m) {
+
+        int temp = list.get(n);
+        list.set(n, list.get(m));
+        list.set(m, temp);
+    }
 
 }
