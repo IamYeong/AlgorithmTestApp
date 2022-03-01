@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
         mergeSortButton = findViewById(R.id.btn_merge_sort);
         radixSortButton = findViewById(R.id.btn_radix_sort);
         countingSortButton = findViewById(R.id.btn_counting_sort);
+        heapSortButton = findViewById(R.id.btn_heap_sort);
+        bucketSortButton = findViewById(R.id.btn_bucket_sort);
 
         shuffleButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,6 +121,40 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        heapSortButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                SortManager sortManager = new SortManager();
+                sortManager.heapSort(array);
+
+                updateArrayText();
+
+            }
+        });
+
+        bucketSortButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                SortManager sortManager = new SortManager();
+                sortManager.bucketSort(array);
+
+                updateArrayText();
+            }
+        });
+
+        radixSortButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                SortManager sortManager = new SortManager();
+                sortManager.radixSort(array);
+
+                updateArrayText();
+
+            }
+        });
 
 
     }

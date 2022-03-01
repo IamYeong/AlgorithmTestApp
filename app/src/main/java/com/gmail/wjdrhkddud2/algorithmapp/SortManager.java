@@ -1,7 +1,10 @@
 package com.gmail.wjdrhkddud2.algorithmapp;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingDeque;
 
 public class SortManager {
 
@@ -300,6 +303,8 @@ public class SortManager {
      * 이 말을 코드로 풀어보면 각 값의 등장횟수를 누적까지 시킨 counting[] 배열이 있고, 정렬이 안 된 array[] 가 있다면
      * array[counting[i] - 1] = i;
      *
+     * 단, 수의 범위만큼 counting 배열의 길이가 커지므로 수의 범위가 적당한지 확인해봐야 한다.
+     *
      * @param data
      * @return
      */
@@ -435,14 +440,215 @@ public class SortManager {
 
     public List<Integer> heapSort(List<Integer> data) {
 
+        if (data.size() < 2) {
+            return data;
+        }
+
+        //정렬 안 된 상태에서 마지막 요소를 자식으로 취급한 뒤 부모 인덱스를 우선 가져온다.
+        int parent = getParentIndex(data.size() - 1);
+
+        //우선 max 힙으로 만들기
+        for (int i = parent; i >= 0; i--) {
+
+        }
+
+
+
+        for (int i = data.size() - 1; i > 0; i--) {
+
+            swap(data, 0, i);
+            heapify(data, 0, i - 1);
+
+        }
+
+
+        
+
         return data;
     }
 
+    private void heapify(List<Integer> data, int parentIndex, int lastIndex) {
+
+        int leftChildIndex;
+        int rightChildIndex;
+        int largestIndex;
+
+        while ((parentIndex * 2) + 1 <= lastIndex) {
+
+            leftChildIndex = parentIndex * 2 + 1;
+            rightChildIndex = parentIndex * 2 + 2;
+            largestIndex = parentIndex;
+
+            if (data.get(leftChildIndex) > data.get(largestIndex)) {
+                largestIndex = leftChildIndex;
+            }
+
+            if (rightChildIndex <= lastIndex && data.get(largestIndex) < data.get(rightChildIndex)) {
+                largestIndex = rightChildIndex;
+            }
+
+            if (largestIndex != parentIndex) {
+                swap(data, parentIndex, largestIndex);
+                parentIndex = largestIndex;
+            }
+
+
+        }
+
+
+    }
+
+    private int getParentIndex(int childIndex) {
+
+        return (childIndex - 1) / 2;
+    }
+
+    /** 22.03.01 Radix sort
+     * 자릿수별로 정렬을 해나가는 방법이다.
+     * 자연수 정렬 전 배열이 있다고 했을 때,
+     * 각 자릿수는 10진법이므로 0~9 까지 있다.
+     * 여기에 카운팅정렬을 적용시키면
+     * 10개짜리 배열만 만들어서 각 자릿수별로
+     * 0~9에 해당하는 index에 원소가 증가될 것이다.
+     * 첫 번 째로 1의자릿수가 0~9 크기대로 정렬될 수 있고
+     * 두 번째로 10의 자릿수가 0~9 크기대로 정렬될 수 있다.
+     *
+     * 여기서 의문은 왜 가장 큰 자릿수부터 정렬을 수행하지 않는가이다.
+     *
+     * 그것도 한 번 구현해보자.
+     *
+     * 만약 그 자릿수에 미치지 못 한다면 0으로 취급하면 된다.
+     *
+     * 지금도 비슷하게 진행되고 있다.
+     * 예를 들어 exp가 1000인데 1000이외의 수는 모두 이보다 모자라다면
+     * count 배열에서 count[0]만 999 이고 count[1] 만 1일 것이다.
+     * count[0]-- 해가며 999개 정렬안된채로 다시 넣고 마지막에 count[1] 을 넣으면 큰 수 부터 정렬 완성.
+     *
+     *
+     * @param data
+     * @return
+     */
     public List<Integer> radixSort(List<Integer> data) {
 
+        //최대 자릿수만큼만 정렬시키기 위한 변수
+        int max = data.get(0);
+
+        for (int i = 1; i < data.size(); i++) {
+
+            int k = data.get(i);
+            if (max < k) max = k;
+
+        }
+
+        for (int exp = 1; exp < max; exp *= 10) {
+
+            countingSortForRadix(data, exp);
+
+        }
+
+
         return data;
     }
+
+    private void countingSortForRadix(List<Integer> data, int exp) {
+
+        int[] count = new int[10];
+        int[] result = new int[data.size()];
+        //List<Integer> result = new ArrayList<>();
+
+        //exp로 받은 자릿수의 수를 카운팅함. 0~9 만 나옴
+        for (int i = 0; i < data.size(); i++) {
+            count[(data.get(i) / exp) % 10]++;
+        }
+
+        //누적
+        for (int i = 1; i < count.length; i++) {
+            count[i] += count[i - 1];
+        }
+
+        for (int i = data.size() - 1; i >= 0; i--) {
+            result[count[(data.get(i) / exp) % 10] - 1] = data.get(i);
+            count[(data.get(i) / exp) % 10]--;
+        }
+
+        //복사
+        for (int i = 0; i < data.size(); i++) {
+            data.set(i, result[i]);
+        }
+
+    }
+
+    /** 22.02.27 Bucket sort
+     * 특정 범위안에 데이터가 균등하게 분포해있을 때 쓰기 좋은 정렬,
+     * 2차원배열형태로 만든 bucket 배열을 이용해서 정렬한다.
+     * 특정 범위별로 각 바구니(bucket)에 수를 집어 넣는다.
+     * 예를 들어 0~10, 11~20 이런식이다.
+     * 그 뒤 바구니별로 다시 삽입정렬해준다.(정렬방법 상관없음)
+     * 바구니에서 차례대로 수를 꺼내오면 정렬된다.
+     *
+     * 예시들은 0~1 이었지만
+     * 아래의 배열은 0~999이다.
+     * bucket 의 간격을 100으로 잡고
+     * 각 요소 / 간격 을 해준 결과만큼의 index 에 값을 넣으면 된다.
+     * ex) bucket[(int)(data.get(i) / interval)].add(data.get(i));
+     * 예를 들어 995는 9.95가 된 후 9로 형변환돼서 900 ~ 1000을 의미하는 index에 들어간다.
+     *
+     * 바구니별로 정렬 후 순서대로 꺼내오기만 하면 된다.
+     *
+     * 이걸 여러 수의 범위에 적용시키는 것이 고민이긴 하지만
+     * 이미 어떤 방법인지 이해했기 때문에 개념만 알고 있고,
+     * 적절할 때 찾아서 쓸 수 있는 것이 핵심이다.
+     * @param data
+     * @return
+     */
+
     public List<Integer> bucketSort(List<Integer> data) {
+
+        int interval = 100;
+        LinkedList[] bucket;
+
+        //1. 최댓값 고르기
+        int max = data.get(0);
+        for (int ref : data) {
+            if (max < ref) max = ref;
+        }
+
+        //2. 수동으로 설정한 텀대로 나눌 수 있는 버킷 만들기
+        //3. 일정 갯수의 바구니를 생성했고, 최악의 경우 한 바구니에 몰릴 수도 있으므로
+        //각 바구니는 정렬할 배열만큼의 크기를 가짐.
+
+        bucket = new LinkedList[(max / interval) + 1];
+
+        for (int i = 0; i < bucket.length; i++) {
+            bucket[i] = new LinkedList();
+        }
+
+        //바구니에 넣기
+        for (int i = 0; i < data.size(); i++) {
+
+            int ref = data.get(i);
+            bucket[ref / interval].add(ref);
+
+        }
+
+        //바구니별 정렬하기
+        for (int i = 0; i < bucket.length; i++) {
+
+            Collections.sort(bucket[i]);
+
+        }
+
+        int index = 0;
+        //각 값을 순서대로 꺼내서 정렬하기
+        for (int i = 0; i < bucket.length; i++) {
+
+            for (int j = 0; j < bucket[i].size(); j++) {
+
+                data.set(index++, (int)bucket[i].get(j));
+
+            }
+
+        }
 
         return data;
     }
