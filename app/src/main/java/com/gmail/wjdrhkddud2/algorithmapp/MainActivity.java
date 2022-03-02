@@ -2,6 +2,7 @@ package com.gmail.wjdrhkddud2.algorithmapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -15,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView arrayText;
     private Button bubbleSortButton, selectionSortButton, insertionSortButton, shellSortButton,
-            quickSortButton, heapSortButton, bucketSortButton, countingSortButton, radixSortButton, mergeSortButton;
+            quickSortButton, heapSortButton, bucketSortButton, countingSortButton, radixSortButton, mergeSortButton, toSearchButton;
     private List<Integer> array;
     private ImageButton shuffleButton;
 
@@ -36,6 +37,15 @@ public class MainActivity extends AppCompatActivity {
         countingSortButton = findViewById(R.id.btn_counting_sort);
         heapSortButton = findViewById(R.id.btn_heap_sort);
         bucketSortButton = findViewById(R.id.btn_bucket_sort);
+        toSearchButton = findViewById(R.id.btn_to_search);
+
+        toSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                startActivity(intent);
+            }
+        });
 
         shuffleButton.setOnClickListener(new View.OnClickListener() {
             @Override

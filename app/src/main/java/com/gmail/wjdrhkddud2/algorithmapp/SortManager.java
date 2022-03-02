@@ -8,7 +8,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 public class SortManager {
 
-
+    List<Integer> mergeSortedList = new ArrayList<>();
 
     public SortManager() {
 
@@ -356,6 +356,9 @@ public class SortManager {
      * 자기 호출을 하며 두개로 나누면 이진트리 검색처럼 최하단 노드까지 내려갔다가 차근차근 올라오는 코드를 짤 수 있지만
      * 모든 함수가 스택에 쌓여있기 때문에 역시 스택오버플로는 주의해야 한다.
      *
+     * index 기준으로 다 쪼갠 뒤 다시 합칠 때 배열크기가 하나 더 필요한데,
+     * 전역배열로 있어야 배열이 매번 초기화되지 않는다.
+     *
      * @param data
      * @return
      */
@@ -385,7 +388,7 @@ public class SortManager {
 
     private void merge(List<Integer> data, int left, int mid, int right) {
 
-        List<Integer> mergeSortedList = new ArrayList<>();
+
 
         //i는 왼쪽 노드의 첫번째 인덱스,
         //j는 오른쪽 노드의 첫번째 인덱스,
@@ -434,47 +437,110 @@ public class SortManager {
 
     }
 
+    /** 2022.03.02 Heap sort
+     * 루트노드부터 시작해서 각 노드가 두개씩 자식노드를 가지고 가장 오른쪽부터의 노드만 자식이 없을 수 있는 것이 완전 이진트리다.
+     * 그리고 루트노드가 제일 크고 갈수록 작아진다면 이것이 최대힙, 반대라면 최소힙이다.
+     * 완전이진트리에 대소관계 정렬이 돼있는 것이 힙이다.
+     *
+     * 힙을 구현하는 법은 List 가 아닌 [] 배열이다.
+     * 직접 접근하기 때문에 더 간편하기도 하다.
+     *
+     * 힙의 특징은 최댓값 또는 최솟값을 매우 쉽게 확인할 수 있는 것이다.
+     * 루트노드가 항상 최대 또는 최소이기 때문이다.
+     *
+     * 힙정렬은 여기서 착안해서 먼저 정렬 전 배열을 최대힙으로 만들고,
+     * 최댓값인 루트노드를 하나씩 뽑아서 끝에서부터 채우면 이게 오름차순 기준 힙정렬이다.
+     *
+     * 참고로 힙에는 아래와 같은 성질이 있다.
+     * 특정 부모노드를 기준으로 [ 왼쪽 자식노드 인덱스 = 부모인덱스 * 2 + 1 ]
+     * 특정 부모노드를 기준으로 [ 오른쪽 자식노드 인덱스 = 부모인덱스 * 2 + 2 ]
+     * 왼쪽 혹은 오른쪽 자식노드를 기준으로 [ 부모 노드 인덱스 = 자식노드 - 1 / 2 ]
+     *
+     * 그래서 정렬 전 배열을 완전이진트리라고 보고,
+     * 최대힙에 맞춰서 가장 꼬리부분인 립노드부터 정렬해간다.
+     * 부모노드 - 왼쪽 자식노드 - 오른쪽 자식노드 이렇게 세개씩만 신경쓰면 되고,
+     * 이 세 개중 가장 큰 값이 부모노드에 들어가면 되는 간단한 방법이다.
+     *
+     * 이 때, 더 아래에 위치해야 할 값이 더 위에 있을 수도 있기 때문에,
+     * 특정 부모노드기준으로 최대힙조건을 충족시켰다면 다시 뿌리까지 순회하며 확인 및 교환해줘야 한다.
+     *
+     * 이 작업을 거쳐 최대힙이 완성되면
+     * 1. 루트노드를 배열 마지막 값과 교환
+     * 2. Heapify(힙으로 만들어주는 과정, 루트에서 맨 밑까지 값을 다시 교환해나간다고 생각하면 된다)
+     * 3. 정렬성공
+     *
+     * 이를 쉽게 말하면 최초 배열을 최대힙으로 만든 뒤 루트를 뽑는 것을 반복하여 정렬을 하는 것이다.
+     * 개인적으로 이진트리를 별로 써본 적이 없어서 이해가 오래 걸렸기에 설명을 길게 써둔다.
+     *
+     *
+     * @param base
+     * @return
+     */
+
     public List<Integer> heapSort(List<Integer> base) {
 
+        //배열의 길이
         int len = base.size();
-        for(int i = len / 2; i > 0; i--){
-            heapify(base,i,len);
+
+        if (len <= 1) return base;
+
+        //Max heap 으로 만들기
+
+        //가장 마지막 노드는 부모를 가질 수밖에 없으므로
+        //가장 마지막 부모를 찾음
+        int parent = getParent(len - 1);
+
+        for (int i = parent; i >= 0; i--) {
+            heapify(base, i, len - 1);
+
         }
-        do{
-            int tmp = base.get(0);
-            base.set(0, base.get(len - 1));
-            base.set(len - 1, tmp);
-            len = len-1;
-            heapify(base,1,len);
-        }while(len > 1);
+
+        //하나씩 루트노드를 빼면서 정렬완성하기
+        for (int i = len - 1; i >= 0; i--) {
+            swap(base, 0, i);
+            heapify(base, 0, i - 1);
+
+        }
+
 
         return base;
     }
 
-    private void heapify(List<Integer> base, int i, int len) {
+    //인자로 받은 parent 부터 last 까지 heapify.
+    private void heapify(List<Integer> base, int parent, int last) {
 
-        int j;
-        int tmp = base.get(i - 1);
-        while(i<=len/2){ // 자식 존재 여부
-            j = i*2;
-            if((j<len) && (base.get(j - 1) <base.get(j))){
-                j++;
+        int leftChild;
+        int rightChild;
+        int largest;
+
+        while ((parent * 2) + 1 <= last) {
+
+            leftChild = parent * 2 + 1;
+            rightChild = parent * 2 + 2;
+            largest = parent;
+
+            //오른쪽은 없는 경우도있으므로 한 번 더 확인해주고, 부모, 왼쪽 오른쪽 자식 중 가장 큰 인덱스를 꼽는다.
+            if (base.get(leftChild) > base.get(largest)) largest = leftChild;
+            if ((rightChild <= last) && (base.get(rightChild) > base.get(largest))) largest = rightChild;
+
+            //부모가 제일 큰 것이 아니었다면
+            if (largest != parent) {
+                //부모와 왼쪽 or 오른쪽 자식 이랑 바꾼다.
+                swap(base, parent, largest);
+                parent = largest;
+            } else {
+                return;
             }
-            if(tmp >= base.get(j - 1)){
-                break;
-            }
-            base.set(i - 1, base.get(j - 1));
-            i = j;
+
         }
-        base.set(i - 1, tmp);
 
 
     }
 
-    private int getParentIndex(int childIndex) {
-
-        return (childIndex - 1) / 2;
+    private int getParent(int child) {
+        return (child - 1) / 2;
     }
+
 
     /** 22.03.01 Radix sort
      * 자릿수별로 정렬을 해나가는 방법이다.
@@ -631,6 +697,16 @@ public class SortManager {
         int temp = list.get(n);
         list.set(n, list.get(m));
         list.set(m, temp);
+    }
+
+    private void printArray(List<Integer> list) {
+        for (int i = 0; i < list.size(); i++) {
+
+            System.out.print(list.get(i) + ", ");
+
+        }
+
+        System.out.println();
     }
 
 }
