@@ -58,6 +58,28 @@
             android:orientation="vertical"
             >
 
+            <Button
+                android:id="@+id/btn_sequential_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="순차탐색"
+                android:layout_margin="10dp"
+                />
+
+            <Button
+                android:id="@+id/btn_binary_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="이진탐색"
+                android:layout_margin="10dp"
+                />
+
+
+
+
+
 
         </LinearLayout>
 

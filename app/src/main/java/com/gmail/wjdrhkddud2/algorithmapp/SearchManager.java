@@ -42,11 +42,11 @@ public class SearchManager {
         //중간 index
         int middle = (low + high) / 2;
 
-        if (target > middle) {
+        if (target < middle) {
 
             return realBinarySearch(sortedData, target, low, middle - 1);
 
-        } else if (target < middle) {
+        } else if (target > middle) {
 
             return realBinarySearch(sortedData, target, middle + 1, high);
         } else {
