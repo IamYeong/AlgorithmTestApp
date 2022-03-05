@@ -55,6 +55,24 @@ public class SearchManager {
 
     }
 
+    /** 2022.03.03 Binary search tree
+     * 이진탐색트리는 이진탐색이 쉬운 트리라고 생각해도 된다.
+     * 완전이진트리로 구성되어 있고
+     * 부모노드보다 작은 값은 왼쪽 자식으로, 큰 값은 오른쪽 자식으로 구성한다.
+     * 이러한 특성으로 인해 같은 값은 허용되지 않는다.
+     * 삽입/수정/삭제가 빈번히 일어날 때 유용하고 값이 많더라도 검색이 빠르다.
+     *
+     *
+     * @param list
+     * @return
+     */
+
+    public List<Integer> convertListToBinarySearchTree(List<Integer> list) {
+
+
+
+        return list;
+    }
 
 
 
