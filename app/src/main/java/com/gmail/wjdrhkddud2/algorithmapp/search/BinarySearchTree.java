@@ -52,12 +52,11 @@ public class BinarySearchTree {
      * 값이 비어있는 대소관계 조건이 맞는 자리에 들어가기만 하면 된다.
      *
      *
-     * @param node
      */
-    public void insertNode(BinaryTreeNode<Integer> node) {
+    public void insertNode(int value) {
 
         if (root == null) {
-            root = node;
+            root = new BinaryTreeNode<>(value);
 
         } else {
 
@@ -68,17 +67,17 @@ public class BinarySearchTree {
 
                 parentNode = currentNode;
 
-                if (node.getValue() < currentNode.getValue()) {
+                if (value < currentNode.getValue()) {
                     currentNode = currentNode.getLeftChild();
                     if (currentNode == null) {
-                        parentNode.setLeftChild(node);
+                        parentNode.setLeftChild(new BinaryTreeNode<>(value));
                         return;
                     }
                 } else {
 
                     currentNode = currentNode.getRightChild();
                     if (currentNode == null) {
-                        parentNode.setRightChild(node);
+                        parentNode.setRightChild(new BinaryTreeNode<>(value));
                         return;
                     }
                 }
@@ -92,10 +91,94 @@ public class BinarySearchTree {
     }
 
     /** 2022.03.05 이진탐색트리의 삭제
-     *
+     * 삭제할 값을 내려가면서 쭉 탐색을 하고,
+     * 삭제할 노드의 자식이 없는 경우, 한개인경우, 두개인 경우를 나눠서 구성한다.
      *
      */
-    public void deleteNode() {
+    public void deleteNode(int value) {
+
+        if (root == null) return;
+
+        //먼저 탐색을 한다.
+        BinaryTreeNode<Integer> deleteTargetNode = root;
+        BinaryTreeNode<Integer> parentNode = root;
+        boolean isLeft = false;
+
+        if (root.getValue() == value) {
+            root = null;
+        } else {
+
+            BinaryTreeNode<Integer> currentNode = root;
+            while (currentNode.getValue() != value) {
+
+                parentNode = currentNode;
+
+                if (currentNode.getValue() > value) {
+                    isLeft = true;
+                    currentNode = currentNode.getLeftChild();
+                } else {
+                    isLeft = false;
+                    currentNode = currentNode.getRightChild();
+
+                }
+
+                if (currentNode == null) return;
+
+            }
+
+            //둘 다 없는 경우
+            if (deleteTargetNode.getLeftChild() == null && deleteTargetNode.getRightChild() == null) {
+                if (isLeft) parentNode.setLeftChild(null);
+                else parentNode.setRightChild(null);
+
+                //왼쪽만 있는 경우
+            } else if (deleteTargetNode.getRightChild() == null) {
+
+                if (isLeft) parentNode.setLeftChild(deleteTargetNode.getLeftChild());
+                else parentNode.setRightChild(deleteTargetNode.getLeftChild());
+
+                //오른쪽만 있는 경우
+            } else if (deleteTargetNode.getLeftChild() == null) {
+
+                if (isLeft) parentNode.setLeftChild(deleteTargetNode.getRightChild());
+                else parentNode.setRightChild(deleteTargetNode.getRightChild());
+
+                //둘 다 있는 경우
+            } else {
+
+                BinaryTreeNode<Integer> minimumNode = getMinimumNode(deleteTargetNode);
+
+                if (isLeft) {
+                    parentNode.setLeftChild(minimumNode);
+                } else {
+                    parentNode.setRightChild(minimumNode);
+                }
+
+                minimumNode.setLeftChild(deleteTargetNode.getLeftChild());
+                minimumNode.setRightChild(deleteTargetNode.getRightChild());
+
+            }
+
+        }
+
+    }
+
+    private BinaryTreeNode<Integer> getMinimumNode(BinaryTreeNode<Integer> deleteTargetNode) {
+
+        BinaryTreeNode<Integer> parent = deleteTargetNode;
+        BinaryTreeNode<Integer> minimum = deleteTargetNode.getRightChild();
+
+        while (true) {
+            if (minimum.getLeftChild() == null) {
+                parent.setLeftChild(null);
+                return minimum;
+            } else {
+
+                parent = minimum;
+                minimum = minimum.getLeftChild();
+
+            }
+        }
 
     }
 
