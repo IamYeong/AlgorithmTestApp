@@ -189,6 +189,29 @@ public class MainActivity extends AppCompatActivity {
         shuffleArray(array);
         updateArrayText();
 
+        Dijkstra dijkstra = new Dijkstra();
+        dijkstra.run(4);
+
+        /*
+        DijkstraTest d = new DijkstraTest(8);
+        d.input("a","b",4);
+        d.input("a","c",3);
+        d.input("b","c",2);
+        d.input("b","d",5);
+        d.input("c","d",3);
+        d.input("c","e",6);
+        d.input("d","e",1);
+        d.input("d","f",5);
+        d.input("e","g",5);
+        d.input("f","g",2);
+        d.input("f","z",7);
+        d.input("g","z",4);
+
+        //시작점 a에서부터의 최단거리 및 최단경로 출력
+        d.algorithm("a");
+
+         */
+
     }
 
     private void shuffleArray(List<Integer> array) {
@@ -224,5 +247,7 @@ public class MainActivity extends AppCompatActivity {
         arrayText.setText(stringBuilder.toString());
 
     }
+
+
 
 }

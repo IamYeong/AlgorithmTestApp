@@ -1,5 +1,8 @@
 package com.gmail.wjdrhkddud2.algorithmapp;
 
+import com.gmail.wjdrhkddud2.algorithmapp.search.BinarySearchTree;
+import com.gmail.wjdrhkddud2.algorithmapp.search.BinaryTreeNode;
+
 import java.util.List;
 
 public class SearchManager {
@@ -67,11 +70,17 @@ public class SearchManager {
      * @return
      */
 
-    public List<Integer> convertListToBinarySearchTree(List<Integer> list) {
+    public BinarySearchTree convertListToBinarySearchTree(List<Integer> list) {
 
+        BinarySearchTree tree = new BinarySearchTree();
 
+        for (int i = 0; i < list.size(); i++) {
 
-        return list;
+            tree.insertNode(list.get(i));
+
+        }
+
+        return tree;
     }
 
 

@@ -76,7 +76,32 @@
                 android:layout_margin="10dp"
                 />
 
+            <Button
+                android:id="@+id/btn_tree_insertion_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="트리삽입"
+                android:layout_margin="10dp"
+                />
 
+            <Button
+                android:id="@+id/btn_tree_delete_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="트리삭제"
+                android:layout_margin="10dp"
+                />
+
+            <Button
+                android:id="@+id/btn_tree_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="트리탐색"
+                android:layout_margin="10dp"
+                />
 
 
 

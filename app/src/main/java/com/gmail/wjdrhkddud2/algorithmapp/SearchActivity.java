@@ -11,6 +11,9 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.gmail.wjdrhkddud2.algorithmapp.search.BinarySearchTree;
+import com.gmail.wjdrhkddud2.algorithmapp.search.BinaryTreeNode;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,10 +21,11 @@ public class SearchActivity extends AppCompatActivity {
 
     private HorizontalScrollView horizontalScrollView;
     private LinearLayout linearHorizontal;
-    private Button sequentialButton, binaryButton;
+    private Button sequentialButton, binaryButton, treeInsertButton, treeDeleteButton, treeSearchButton;
     private ImageButton shuffleButton;
     private int searchIndex = -1;
     private List<Integer> data;
+    private BinarySearchTree tree;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +37,18 @@ public class SearchActivity extends AppCompatActivity {
         linearHorizontal = findViewById(R.id.linear_horizontal_search);
         shuffleButton = findViewById(R.id.btn_shuffle_search);
 
+        treeInsertButton = findViewById(R.id.btn_tree_insertion_search);
+        treeDeleteButton = findViewById(R.id.btn_tree_delete_search);
+        treeSearchButton = findViewById(R.id.btn_tree_search);
+
         sequentialButton = findViewById(R.id.btn_sequential_search);
         binaryButton = findViewById(R.id.btn_binary_search);
 
         addData();
         updateUI();
+        SearchManager manager = new SearchManager();
+        tree = manager.convertListToBinarySearchTree(data);
+
 
         shuffleButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,13 +84,40 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
 
+        treeSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+                BinaryTreeNode<Integer> node = tree.searchTree(5);
+                System.out.println("Search node value : " + node.getValue());
 
+            }
+        });
 
+        treeInsertButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+                int k = (int)(Math.random() * 100);
+                tree.insertNode(k);
+                tree.selectTree(tree.getRoot());
+            }
+        });
+
+        treeDeleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                tree.deleteNode(8);
+                tree.selectTree(tree.getRoot());
+
+            }
+        });
 
 
     }
+
+
 
     private void updateUI() {
 

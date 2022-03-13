@@ -182,4 +182,32 @@ public class BinarySearchTree {
 
     }
 
+    public void selectTree(BinaryTreeNode<Integer> parentNode) {
+
+        if (parentNode == null) {
+            return;
+        } else {
+            System.out.println(parentNode.getValue());
+        }
+
+        if (parentNode.getLeftChild() == null) {
+            return;
+        } else {
+            System.out.println(parentNode.getLeftChild().getValue());
+            selectTree(parentNode.getLeftChild());
+        }
+
+        if (parentNode.getRightChild() == null) {
+            return;
+        } else {
+            System.out.println(parentNode.getRightChild().getValue());
+            selectTree(parentNode.getRightChild());
+        }
+
+
+    }
+
+    public BinaryTreeNode<Integer> getRoot() {
+        return root;
+    }
 }
