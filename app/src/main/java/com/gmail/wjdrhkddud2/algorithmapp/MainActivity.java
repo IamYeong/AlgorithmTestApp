@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.gmail.wjdrhkddud2.algorithmapp.Dijkstra.Dijkstra;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -189,8 +191,6 @@ public class MainActivity extends AppCompatActivity {
         shuffleArray(array);
         updateArrayText();
 
-        Dijkstra dijkstra = new Dijkstra();
-        dijkstra.run(4);
 
         /*
         DijkstraTest d = new DijkstraTest(8);

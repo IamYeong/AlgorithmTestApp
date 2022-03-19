@@ -1,4 +1,4 @@
-package com.gmail.wjdrhkddud2.algorithmapp;
+package com.gmail.wjdrhkddud2.algorithmapp.Dijkstra;
 
 import java.util.Random;
 
@@ -33,6 +33,8 @@ public class Dijkstra {
         //각 정점으로의 거리는 무한대의 의미로 Integer 의 최댓값으로 입력
         for (int i = 0; i < distances.length; i++) {
             distances[i] = Integer.MAX_VALUE;
+            vertexes[i] = i;
+            paths[i] = "";
         }
 
         for (int i = 0; i < weights.length; i++) {
@@ -62,20 +64,43 @@ public class Dijkstra {
         //자기 자신으로의 거리 0으로 초기화
         distances[startVertexIndex] = 0;
 
-        //자기 자신으로의 방문 완료
-        isVisit[startVertexIndex] = true;
+        boolean allVisit = false;
 
-        //출력을 위한 경로(2번 정점에서 4번 정점까지의 경로를 출력하면 2, 5, 4 처럼 나오도록)를 저장하는 배열이 paths인데,
-        //자기 자신으로의 경로는 하나만 저장하면 되니 미리 출발정점을 문자열로 변환하여 넣어둔다. 2번에서 2번으로 가는 경로는 "2" 하나면 되기 때문이다.
-        paths[startVertexIndex] += (startVertexIndex + "");
+        while (true) {
 
-        for (int i = 0; i < VERTEX_SIZE; i++) {
+            //하나라도 false 가 있다면 false로 마무리, 모두 true 라면 true 로 마무리.
+            allVisit = isVisit[0];
+            for (int i = 1; i < isVisit.length; i++) {
+                allVisit = (isVisit[i] && allVisit);
+            }
 
-            //일단 시작점을 기준으로 인접된 점 중에 방문하지 않은 곳을 탐색한다.
-            if (!isVisit[i] && weights[startVertexIndex][i] != 0) {
+            if (allVisit) break;
 
-                distances[i] = weights[startVertexIndex][i];
-                paths[i] += (startVertexIndex + "");
+            //현재 거리 중 가장 짧은데 방문 안 한 곳 방문
+
+            int shortestDistance = Integer.MAX_VALUE;
+            int shortestIndex = -1;
+
+            for (int i = 0; i < vertexes.length; i++) {
+
+                if (!isVisit[i] && (distances[i] < shortestDistance)) shortestIndex = i;
+
+            }
+
+            isVisit[shortestIndex] = true;
+
+            //방문한 곳과 인접한 정점 최단거리 업데이트
+            for (int i = 0; i < vertexes.length; i++) {
+
+                for (int j = 0; j < vertexes.length; j++) {
+
+                    if (distances[i] > (distances[shortestIndex] + weights[shortestIndex][j])) {
+                        distances[i] = (distances[shortestIndex] + weights[shortestIndex][j]);
+                    }
+
+                }
+
+
             }
 
 
@@ -92,13 +117,11 @@ public class Dijkstra {
 
             String a = paths[i];
 
-            System.out.print(start + " Vertex 부터 " + i + " Vertex 까지 최단경로 : ");
+            System.out.print(start + " Vertex 부터 " + i + " Vertex 까지 최단경로 : " + a);
+            System.out.print("Distances " + i + " : " + distances[i]);
+            //System.out.print(a);
 
-            for (int j = 0; j < a.length(); j++) {
-                System.out.print(a.charAt(j));
-                System.out.print(", ");
-            }
-
+            System.out.println();
             System.out.println();
 
         }

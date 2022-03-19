@@ -1,4 +1,4 @@
-package com.gmail.wjdrhkddud2.algorithmapp;
+package com.gmail.wjdrhkddud2.algorithmapp.Dijkstra;
 
 public class DijkstraTest {
 
@@ -51,23 +51,23 @@ public class DijkstraTest {
 
         for(int i = 0; i < n; i++) {
 
-            //아직 방문하기 전이고 시작점과 인접한 정점이 있다면 거리업데이트 + 경로에 시작점 입력
-            if(!visited[i] && weight[x][i]!=0) {
+            //시작점과 인접한(가중치가 0이 아닌) 정점 중 방문 안 한 곳 거리업데이트
+            if(!visited[i] && weight[x][i] != 0) {
                 distance[i] = weight[x][i];
                 saveRoute[i] = vertex[x];
             }
         }
 
-        //정점보다 하나 덜 반복문 실행
+
         for(int i = 0; i < n - 1; i++) {
             int minDistance = Integer.MAX_VALUE; //최단거리 minDistance에 일단 가장 큰 정수로 저장하고,
             int minVertex = -1; //그 거리값이 있는 인덱스 minIndex에 -1을 저장해둔다.
+
             for(int j = 0; j < n; j++) {
-                //아직 방문하지 않았는데 시작점부터 경로가 업데이트되지 않은 곳
-                //방문 안 했으면 당연히 업데이트 안 돼있는 것 아닌가?
+
+                //거리정보가 있는 곳 중 가장 가중치가 작은 정점을 탐색 후 방문
                 if(!visited[j] && distance[j] != Integer.MAX_VALUE) {
 
-                    //j 점까지의 거리가 minDistance 지역변수 보다 작다면 업데이트
                     if(distance[j] < minDistance) {
                         minDistance = distance[j];
                         minVertex = j;

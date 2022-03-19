@@ -1,5 +1,7 @@
 package com.gmail.wjdrhkddud2.algorithmapp;
 
+import com.gmail.wjdrhkddud2.algorithmapp.Dijkstra.Dijkstra;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -12,6 +14,11 @@ import static org.junit.Assert.*;
 public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() {
-        assertEquals(4, 2 + 2);
+
+        Dijkstra dijkstra = new Dijkstra();
+        dijkstra.run(4);
+
+
+        //assertEquals(4, 2 + 2);
     }
 }
