@@ -24,100 +24,78 @@ public class Dijkstra {
 
         paths = new String[VERTEX_SIZE];
 
-        deployWeights();
-
     }
 
-    private void deployWeights() {
+    //Add weight both a and b
+    public void addWeight(int a, int b, int weight) {
 
-        //각 정점으로의 거리는 무한대의 의미로 Integer 의 최댓값으로 입력
-        for (int i = 0; i < distances.length; i++) {
-            distances[i] = Integer.MAX_VALUE;
-            vertexes[i] = i;
-            paths[i] = "";
-        }
-
-        for (int i = 0; i < weights.length; i++) {
-
-            for (int j = 0; j < weights.length; j++) {
-
-                if (i == j) {
-                    weights[i][j] = 0;
-
-                } else {
-
-                    int randomWeight = (int)(Math.random() * weights.length);
-                    weights[i][j] = randomWeight;
-
-                }
-
-                System.out.println(i + " 행, " + j + " 열 : " + weights[i][j]);
-
-            }
-
-        }
-
+        //서로 같은 값을 가지고 있으니 무방향 그래프라고 생각할 수 있다.
+        weights[a][b] = weight;
+        weights[b][a] = weight;
     }
+
 
     public void run(int startVertexIndex) {
 
         //자기 자신으로의 거리 0으로 초기화
         distances[startVertexIndex] = 0;
+        isVisit[startVertexIndex] = true;
+        //path
 
-        boolean allVisit = false;
-
-        while (true) {
-
-            //하나라도 false 가 있다면 false로 마무리, 모두 true 라면 true 로 마무리.
-            allVisit = isVisit[0];
-            for (int i = 1; i < isVisit.length; i++) {
-                allVisit = (isVisit[i] && allVisit);
+        //시작점과 인접한 정점 거리 업데이트
+        for (int i = 0; i < vertexes.length; i++) {
+            if (!isVisit[i] && (weights[startVertexIndex][i] != 0)) {
+                distances[i] = weights[startVertexIndex][i];
             }
+        }
 
-            if (allVisit) break;
+        for (int i = 0; i < vertexes.length - 1; i++) {
 
-            //현재 거리 중 가장 짧은데 방문 안 한 곳 방문
-
-            int shortestDistance = Integer.MAX_VALUE;
             int shortestIndex = -1;
+            int shortestDistance = Integer.MAX_VALUE;
 
-            for (int i = 0; i < vertexes.length; i++) {
+            //방문 안 했고 거리정보가 있는 곳 중, 가장 짧은 곳을 골라서 방문
+            for (int j = 0; j < vertexes.length; j++) {
 
-                if (!isVisit[i] && (distances[i] < shortestDistance)) shortestIndex = i;
+                if (!isVisit[j] && distances[j] != Integer.MAX_VALUE) {
+
+                    if (shortestDistance > distances[j]) {
+                        shortestDistance = distances[j];
+                        shortestIndex = j;
+                    }
+
+                }
 
             }
 
             isVisit[shortestIndex] = true;
 
-            //방문한 곳과 인접한 정점 최단거리 업데이트
-            for (int i = 0; i < vertexes.length; i++) {
+            for (int j = 0; j < vertexes.length; j++) {
 
-                for (int j = 0; j < vertexes.length; j++) {
+                //정점을 순회하면서 방문을 아직 안 했고 방금 방문한 정점과 인접한 정점
+                if (!isVisit[j] && (weights[shortestIndex][j] != 0)) {
 
-                    if (distances[i] > (distances[shortestIndex] + weights[shortestIndex][j])) {
-                        distances[i] = (distances[shortestIndex] + weights[shortestIndex][j]);
+                    //거리업데이트
+                    if (distances[j] > (distances[shortestIndex] + weights[shortestIndex][j])) {
+                        distances[j] = (distances[shortestIndex] + weights[shortestIndex][j]);
                     }
 
                 }
 
-
             }
 
+            //printDistances(startVertexIndex);
 
         }
 
 
-
-        printResult(startVertexIndex);
+        printDistances(startVertexIndex);
     }
 
-    public void printResult(int start) {
+    public void printDistances(int start) {
 
-        for (int i = 0; i < paths.length; i++) {
+        for (int i = 0; i < distances.length; i++) {
 
-            String a = paths[i];
-
-            System.out.print(start + " Vertex 부터 " + i + " Vertex 까지 최단경로 : " + a);
             System.out.print("Distances " + i + " : " + distances[i]);
             //System.out.print(a);
 
@@ -125,6 +103,12 @@ public class Dijkstra {
             System.out.println();
 
         }
+
+    }
+
+    public void printPaths(int start) {
+
+
 
     }
 

@@ -98,16 +98,16 @@ public class DijkstraTest {
 
         //시작 꼭지점부터 특정 꼭지점까지의 경로 출력
         for(int i=0; i<n; i++) {
-            String route = "";
+            StringBuilder route = new StringBuilder();
             System.out.println("시작 꼭지점 "+a+"부터 꼭지점 "+vertex[i]+"까지의 경로");
             int index = i;
             while(true) {
                 if(saveRoute[index].equals(vertex[index])) break;
 
-                route += (" " + saveRoute[index]);
+                route.append(" ").append(saveRoute[index]);
                 index = stringToInt(saveRoute[index]);
             }
-            StringBuilder sb = new StringBuilder(route);
+            StringBuilder sb = new StringBuilder(route.toString());
             System.out.println(sb.reverse() + vertex[i]);
         }
     }
